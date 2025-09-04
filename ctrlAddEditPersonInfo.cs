@@ -10,11 +10,23 @@ using System.Windows.Forms;
 
 namespace DVLD
 {
-    public partial class Form1 : Form
+    public partial class ctrlAddEditPersonInfo : UserControl
     {
-        public Form1()
+        public ctrlAddEditPersonInfo()
         {
             InitializeComponent();
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        
+
+        private void ctrlAddEditPersonInfo_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
