@@ -24,11 +24,12 @@ namespace DVLD
         private void frmAddEditPersonInfo_Load(object sender, EventArgs e)
         {
             _FillCountriesInComboBox();
-            _SetImageInitially();
+            _SetDefaultImage();
             _Validateing18Years();
+            linkLblRemoveImage.Visible = false;
         }
 
-        private void _SetImageInitially()
+        private void _SetDefaultImage()
         {
             rbMale.Checked = true;
             pbImage.Image = Properties.Resources.Male_512;
@@ -80,6 +81,7 @@ namespace DVLD
             else
                 MessageBox.Show("Faild To added the new person", "Fail", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
+            lblPersonID.Text = NewPerson.PersonID.ToString();
         }
 
         private void LinkLblSetImage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -93,6 +95,7 @@ namespace DVLD
             {
                 pbImage.Image = Image.FromFile(openFileDialog1.FileName);
                 IsCustomImage = true;
+                linkLblRemoveImage.Visible = true;
             }
         }
 
@@ -107,6 +110,103 @@ namespace DVLD
         {
             if (rbMale.Checked && !IsCustomImage)
                 pbImage.Image = Properties.Resources.Male_512;
+        }
+
+        private void txtFirstName_Validating(object sender, CancelEventArgs e)
+        {
+            if(string.IsNullOrWhiteSpace(txtFirstName.Text))
+            {
+                txtFirstName.Focus();
+                errorProvider1.SetError(txtFirstName, "First Name should have a value");
+            }
+            else
+                errorProvider1.SetError(txtFirstName, "");
+
+        }
+
+        private void txtSecondName_Validating(object sender, CancelEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtSecondName.Text))
+            {
+                txtSecondName.Focus();
+                errorProvider1.SetError(txtSecondName, "Second Name should have a value");
+            }
+            else
+                errorProvider1.SetError(txtSecondName, "");
+        }
+
+        private void txtThirdName_Validating(object sender, CancelEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtThirdName.Text))
+            {
+                txtThirdName.Focus();
+                errorProvider1.SetError(txtThirdName, "Third Name should have a value");
+            }
+            else
+                errorProvider1.SetError(txtThirdName, "");
+        }
+
+        private void txtLastName_Validating(object sender, CancelEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtLastName.Text))
+            {
+                txtLastName.Focus();
+                errorProvider1.SetError(txtLastName, "Last Name should have a value");
+            }
+            else
+                errorProvider1.SetError(txtLastName, "");
+        }
+
+        private void txtNationalNo_Validating(object sender, CancelEventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtNationalNo.Text))
+            {
+                txtNationalNo.Focus();
+                errorProvider1.SetError(txtNationalNo, "National Number should have a value");
+                return;
+            }
+            else
+               errorProvider1.SetError(txtNationalNo, "");
+
+
+
+            if (clsPeople.IsPersonExist(txtNationalNo.Text))
+            {
+                txtNationalNo.Focus();
+                errorProvider1.SetError(txtNationalNo, "National Number is used for another person!");
+            }
+            else
+                errorProvider1.SetError(txtNationalNo, "");
+        }
+
+        private void txtPhone_Validating(object sender, CancelEventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtPhone.Text))
+            {
+                txtPhone.Focus();
+                errorProvider1.SetError(txtPhone, "Phone should have a value");
+            }
+            else
+                errorProvider1.SetError(txtPhone, "");
+        }
+
+        private void txtEmail_Validating(object sender, CancelEventArgs e)
+        {
+            string Email = txtEmail.Text.Trim();
+
+            if (!Email.EndsWith("@gmail.com"))
+            {
+                txtEmail.Focus();
+                errorProvider1.SetError(txtEmail, "Invalid Email Address Format");
+            }
+            else
+                errorProvider1.SetError(txtEmail, "");
+
+        }
+
+        private void linkLblRemoveImage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            _SetDefaultImage();
         }
     }
 }
