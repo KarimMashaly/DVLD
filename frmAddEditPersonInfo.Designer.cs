@@ -197,9 +197,9 @@
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label13.Location = new System.Drawing.Point(15, 231);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(62, 20);
+            this.label13.Size = new System.Drawing.Size(84, 20);
             this.label13.TabIndex = 32;
-            this.label13.Text = "Email:";
+            this.label13.Text = "Address:";
             // 
             // cbCountry
             // 

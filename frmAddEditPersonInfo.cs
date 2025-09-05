@@ -38,7 +38,7 @@ namespace DVLD
             //_IsCustomImage = false;
             if (_Mode == enMode.eAddNew)
             {
-                _IsChoosedAddPerson();
+                _IsChoosedAddNewPerson();
             }
             else
             {
@@ -46,7 +46,7 @@ namespace DVLD
             }
         }
         
-        private void _IsChoosedAddPerson()
+        private void _IsChoosedAddNewPerson()
         {
             _Person = new clsPeople();
             lblAddEdit.Text = "Add New Person";

@@ -37,7 +37,7 @@ namespace DVLD
 
         private void btnAddNewPerson_Click(object sender, EventArgs e)
         {
-            Form frm = new frmAddEditPersonInfo((int)enAddEdit.eAdd);
+            Form frm = new frmAddEditPersonInfo(-1);
             frm.ShowDialog();
             _RefreshPeopleList();
         }
@@ -55,5 +55,7 @@ namespace DVLD
             frm.ShowDialog();
             _RefreshPeopleList();
         }
+
+        
     }
 }
