@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace DVLD
     public partial class frmAddEditPersonInfo : Form
     {
         enum enGender { eMale, eFemale}
-        //enGender _Gender;
+
         bool IsCustomImage = false;
         public frmAddEditPersonInfo()
         {
@@ -75,7 +76,7 @@ namespace DVLD
             NewPerson.Email = txtEmail.Text;
             NewPerson.Address = txtAddress.Text;
             NewPerson.NationalityCountryID = CountryID;
-            NewPerson.ImagePath = openFileDialog1.FileName;
+            NewPerson.ImagePath = IsCustomImage ? _CopyImage(openFileDialog1.FileName) : null;
             if (NewPerson.Save())
                 MessageBox.Show("New Person is added successfully!!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             else
@@ -84,6 +85,23 @@ namespace DVLD
             lblPersonID.Text = NewPerson.PersonID.ToString();
         }
 
+        private string _CopyImage(string SourcePath)
+        {
+
+            string FolderPath = @"D:\DVLD_Images";
+
+            if(!Directory.Exists(FolderPath))
+                Directory.CreateDirectory(FolderPath);
+            
+            string Extension = Path.GetExtension(SourcePath);
+            string NewFileName = Guid.NewGuid().ToString() + Extension;
+            string DestPath = Path.Combine(FolderPath, NewFileName);
+
+            File.Copy(SourcePath, DestPath,true);
+
+            MessageBox.Show(DestPath);
+            return DestPath;
+        }
         private void LinkLblSetImage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             openFileDialog1.InitialDirectory = @"Downloads";
@@ -206,7 +224,10 @@ namespace DVLD
 
         private void linkLblRemoveImage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
+            IsCustomImage = false;
+            linkLblRemoveImage.Visible = false;
             _SetDefaultImage();
+            
         }
     }
 }

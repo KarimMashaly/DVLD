@@ -38,6 +38,7 @@ namespace DVLD
         {
             Form frm = new frmAddEditPersonInfo();
             frm.ShowDialog();
+            _RefreshPeopleList();
         }
     }
 }
