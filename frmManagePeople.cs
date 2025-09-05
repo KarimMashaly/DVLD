@@ -31,7 +31,61 @@ namespace DVLD
 
         private void _RefreshPeopleList()
         {
-            dataGridView1.DataSource = clsPeople.GetAllPeople();
+            //dataGridView1.DataSource = clsPeople.GetAllPeople();
+            DataTable dt = clsPeople.GetAllPeople();
+
+            dt.Columns.Add("Gender", typeof(string));
+
+            foreach(DataRow row in dt.Rows)
+            {
+                row["Gender"] = (Convert.ToByte(row["Gendor"]) == 0 ? "Male": "Female");
+
+            }
+
+            dt.Columns.Add("Nationality", typeof(string));
+
+            foreach (DataRow row in dt.Rows)
+            {
+                row["Nationality"] = clsCountry.Find((int)row["NationalityCountryID"]).CountryName;
+            }
+
+            dataGridView1.AutoGenerateColumns = false;
+            dataGridView1.Columns.Clear();
+
+            dataGridView1.Columns.Add("colPersonID", "PersonID");
+            dataGridView1.Columns["colPersonID"].DataPropertyName = "PersonID";
+
+            dataGridView1.Columns.Add("colNationalNo", "NationalNo");
+            dataGridView1.Columns["colNationalNo"].DataPropertyName = "NationalNo";
+
+            dataGridView1.Columns.Add("colFirstName", "FirstName");
+            dataGridView1.Columns["colFirstName"].DataPropertyName = "FirstName";
+
+            dataGridView1.Columns.Add("colSecondName", "SecondName");
+            dataGridView1.Columns["colSecondName"].DataPropertyName = "SecondName";
+
+            dataGridView1.Columns.Add("colThirdName", "ThirdName");
+            dataGridView1.Columns["colThirdName"].DataPropertyName = "ThirdName";
+
+            dataGridView1.Columns.Add("colLastName", "LastName");
+            dataGridView1.Columns["colLastName"].DataPropertyName = "LastName";
+
+            dataGridView1.Columns.Add("colGender", "Gender");
+            dataGridView1.Columns["colGender"].DataPropertyName = "Gender";
+
+            dataGridView1.Columns.Add("colDateOfBirth", "DateOfBirth");
+            dataGridView1.Columns["colDateOfBirth"].DataPropertyName = "DateOfBirth";
+
+            dataGridView1.Columns.Add("colNationality", "Nationality");
+            dataGridView1.Columns["colNationality"].DataPropertyName = "Nationality";
+
+            dataGridView1.Columns.Add("colPhone", "Phone");
+            dataGridView1.Columns["colPhone"].DataPropertyName = "Phone";
+
+            dataGridView1.Columns.Add("colEmail", "Email");
+            dataGridView1.Columns["colEmail"].DataPropertyName = "Email";
+
+            dataGridView1.DataSource = dt;
             lblNumberOfRecords.Text = dataGridView1.RowCount.ToString();
         }
 
@@ -56,6 +110,29 @@ namespace DVLD
             _RefreshPeopleList();
         }
 
-        
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int PersonID = (int)dataGridView1.CurrentRow.Cells[0].Value;
+            string Message = "Are you sure you want to delete person [" + PersonID.ToString() + "]?";
+            DialogResult Result = MessageBox.Show(Message, "Configuration Message",
+                MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+
+            if(Result == DialogResult.OK)
+            {
+                if (clsApplication.IsApplicationExistByApplicantPersonID(PersonID))
+                {
+                    MessageBox.Show("Person was not deleted because it has data linked to it", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                clsPeople.DeletePerson(PersonID);
+
+                MessageBox.Show("Person Deleted Successfully.", "Successful", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+
+            _RefreshPeopleList();
+        }
     }
 }
