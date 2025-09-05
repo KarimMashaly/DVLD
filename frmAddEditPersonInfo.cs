@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -15,25 +16,90 @@ namespace DVLD
     public partial class frmAddEditPersonInfo : Form
     {
         enum enGender { eMale, eFemale}
-
-        bool IsCustomImage = false;
-        public frmAddEditPersonInfo()
+         enum enMode { eAddNew, eUpdate}
+         enMode _Mode;
+        int _PersonID;
+        clsPeople _Person;
+        bool _IsCustomImage = false;
+        public frmAddEditPersonInfo(int PersonID)
         {
             InitializeComponent();
+            if (PersonID == -1)
+                _Mode = enMode.eAddNew;
+            else
+            { 
+                _Mode = enMode.eUpdate;
+                _PersonID = PersonID;
+            }
         }
 
         private void frmAddEditPersonInfo_Load(object sender, EventArgs e)
         {
+            //_IsCustomImage = false;
+            if (_Mode == enMode.eAddNew)
+            {
+                _IsChoosedAddPerson();
+            }
+            else
+            {
+                _IsChoosedUpdatePerson();
+            }
+        }
+        
+        private void _IsChoosedAddPerson()
+        {
+            _Person = new clsPeople();
+            lblAddEdit.Text = "Add New Person";
             _FillCountriesInComboBox();
-            _SetDefaultImage();
+            cbCountry.SelectedIndex = 0;
             _Validateing18Years();
             linkLblRemoveImage.Visible = false;
+            rbMale.Checked = true;
+            _SetDefaultImage();
         }
 
+        private void _IsChoosedUpdatePerson()
+        {
+            _Person = clsPeople.Find(_PersonID);
+            //MessageBox.Show(_Person.FirstName);
+            lblAddEdit.Text = "Update Person";
+            _FillCountriesInComboBox();
+            cbCountry.SelectedItem = clsCountry.Find(_Person.NationalityCountryID).CountryName;
+            //cbCountry.SelectedIndex = cbCountry.FindString(clsCountry.Find(_Person.NationalityCountryID).CountryName);
+            lblPersonID.Text = _Person.PersonID.ToString();
+            txtNationalNo.Text = _Person.NationalNo;
+            txtFirstName.Text = _Person.FirstName;
+            txtSecondName .Text = _Person.SecondName;
+            txtThirdName .Text = _Person.ThirdName;
+            txtLastName.Text = _Person.LastName;   
+            txtEmail.Text = _Person.Email;
+            txtPhone.Text = _Person.Phone;
+            dtpDateOfBirth.Value = _Person.DateOfBirth;
+
+            if (_Person.Gender == 0)
+                rbMale.Checked = true;
+            else
+                rbFemale.Checked = true;
+
+            txtAddress.Text = _Person.Address;
+
+            if(_Person.ImagePath != null && _Person.ImagePath != "")
+            {
+                //_IsCustomImage = true;
+                pbImage.Image = new Bitmap(_Person.ImagePath); 
+            }
+            else
+            {
+                _SetDefaultImage();
+            }
+        }
         private void _SetDefaultImage()
         {
-            rbMale.Checked = true;
-            pbImage.Image = Properties.Resources.Male_512;
+            linkLblRemoveImage.Visible = false;
+            if (rbMale.Checked)
+                pbImage.Image = Properties.Resources.Male_512;
+            else
+                pbImage.Image = Properties.Resources.Female_512;
 
         }
 
@@ -47,12 +113,8 @@ namespace DVLD
 
             foreach (DataRow row in dtCountries.Rows)
             {
-
                 cbCountry.Items.Add(row["CountryName"]);
-
             }
-
-            cbCountry.SelectedIndex = 0;
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -62,27 +124,37 @@ namespace DVLD
 
         private void btnSave_Click(object sender, EventArgs e)
         {
+            _RemoveImageFromFolder();
             int CountryID = clsCountry.Find(cbCountry.Text).CountryID;
-            clsPeople NewPerson = new clsPeople();
 
-            NewPerson.FirstName = txtFirstName.Text;
-            NewPerson.SecondName = txtSecondName.Text;
-            NewPerson.ThirdName = txtThirdName.Text;
-            NewPerson.LastName = txtLastName.Text;
-            NewPerson.NationalNo = txtNationalNo.Text;
-            NewPerson.DateOfBirth = dtpDateOfBirth.Value;
-            NewPerson.Gender = (rbMale.Checked) ? (short)enGender.eMale : (short)enGender.eFemale;
-            NewPerson.Phone = txtPhone.Text;
-            NewPerson.Email = txtEmail.Text;
-            NewPerson.Address = txtAddress.Text;
-            NewPerson.NationalityCountryID = CountryID;
-            NewPerson.ImagePath = IsCustomImage ? _CopyImage(openFileDialog1.FileName) : null;
-            if (NewPerson.Save())
-                MessageBox.Show("New Person is added successfully!!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            _Person.FirstName = txtFirstName.Text;
+            _Person.SecondName = txtSecondName.Text;
+            _Person.ThirdName = txtThirdName.Text;
+            _Person.LastName = txtLastName.Text;
+            _Person.NationalNo = txtNationalNo.Text;
+            _Person.DateOfBirth = dtpDateOfBirth.Value;
+            _Person.Gender = (rbMale.Checked) ? (byte)enGender.eMale : (byte)enGender.eFemale;
+            _Person.Phone = txtPhone.Text;
+            _Person.Email = txtEmail.Text;
+            _Person.Address = txtAddress.Text;
+            _Person.NationalityCountryID = CountryID;
+            if (_IsCustomImage)
+                _Person.ImagePath = _CopyImage(openFileDialog1.FileName);
             else
-                MessageBox.Show("Faild To added the new person", "Fail", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            {
+                if (_Mode == enMode.eAddNew)
+                    _Person.ImagePath = null;
+            }
+                //_Person.ImagePath = (_IsCustomImage) ? _CopyImage(openFileDialog1.FileName) : null;
+            if (_Person.Save())
+                MessageBox.Show("Data saved successfully!!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            else
+                MessageBox.Show("Error: Data is not saved successfully!!", "Fail", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-            lblPersonID.Text = NewPerson.PersonID.ToString();
+            _Mode = enMode.eUpdate;
+            lblAddEdit.Text = "Update Person";
+            lblPersonID.Text = _Person.PersonID.ToString();
+
         }
 
         private string _CopyImage(string SourcePath)
@@ -99,20 +171,20 @@ namespace DVLD
 
             File.Copy(SourcePath, DestPath,true);
 
-            MessageBox.Show(DestPath);
+            //MessageBox.Show(DestPath);
             return DestPath;
         }
         private void LinkLblSetImage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             openFileDialog1.InitialDirectory = @"Downloads";
-            openFileDialog1.Title = "Set Image";
+            openFileDialog1.Title = "Choose Image";
             openFileDialog1.DefaultExt = "png";
             openFileDialog1.Filter = @"All Files (*.*)|*.*| PNG File (*.png)|*.png| JPG File (*.jpg)|*.jpg";
 
             if(openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 pbImage.Image = Image.FromFile(openFileDialog1.FileName);
-                IsCustomImage = true;
+                _IsCustomImage = true;
                 linkLblRemoveImage.Visible = true;
             }
         }
@@ -120,13 +192,13 @@ namespace DVLD
         private void rbFemale_CheckedChanged(object sender, EventArgs e)
         {
             
-            if(rbFemale.Checked && !IsCustomImage)
+            if(rbFemale.Checked && !_IsCustomImage)
                 pbImage.Image = Properties.Resources.Female_512;
         }
 
         private void rbMale_CheckedChanged(object sender, EventArgs e)
         {
-            if (rbMale.Checked && !IsCustomImage)
+            if (rbMale.Checked && !_IsCustomImage)
                 pbImage.Image = Properties.Resources.Male_512;
         }
 
@@ -222,12 +294,22 @@ namespace DVLD
 
         }
 
+        private void _RemoveImageFromFolder()
+        {
+            if (_Mode == enMode.eUpdate && !string.IsNullOrEmpty(_Person.ImagePath) && File.Exists(_Person.ImagePath))
+            {
+              
+                File.Delete(_Person.ImagePath);
+                _Person.ImagePath = null;
+            }
+        }
         private void linkLblRemoveImage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            IsCustomImage = false;
+            _IsCustomImage = false;
             linkLblRemoveImage.Visible = false;
+            pbImage.Image.Dispose();//علشان يحرر الصورة من الذاكرة 
+            pbImage.Image = null;
             _SetDefaultImage();
-            
         }
     }
 }

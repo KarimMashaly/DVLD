@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.linkLblRemoveImage = new System.Windows.Forms.LinkLabel();
             this.btnClose = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.pictureBox9 = new System.Windows.Forms.PictureBox();
@@ -67,13 +68,12 @@
             this.txtSecondName = new System.Windows.Forms.TextBox();
             this.txtFirstName = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblAddEdit = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.lblPersonID = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.pictureBox10 = new System.Windows.Forms.PictureBox();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.linkLblRemoveImage = new System.Windows.Forms.LinkLabel();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).BeginInit();
@@ -133,6 +133,17 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(915, 389);
             this.panel1.TabIndex = 2;
+            // 
+            // linkLblRemoveImage
+            // 
+            this.linkLblRemoveImage.AutoSize = true;
+            this.linkLblRemoveImage.Location = new System.Drawing.Point(771, 289);
+            this.linkLblRemoveImage.Name = "linkLblRemoveImage";
+            this.linkLblRemoveImage.Size = new System.Drawing.Size(100, 16);
+            this.linkLblRemoveImage.TabIndex = 37;
+            this.linkLblRemoveImage.TabStop = true;
+            this.linkLblRemoveImage.Text = "Remove Image";
+            this.linkLblRemoveImage.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLblRemoveImage_LinkClicked);
             // 
             // btnClose
             // 
@@ -497,16 +508,16 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "Name:";
             // 
-            // label1
+            // lblAddEdit
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.Red;
-            this.label1.Location = new System.Drawing.Point(331, 24);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(239, 32);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "Add New Person";
+            this.lblAddEdit.AutoSize = true;
+            this.lblAddEdit.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAddEdit.ForeColor = System.Drawing.Color.Red;
+            this.lblAddEdit.Location = new System.Drawing.Point(331, 24);
+            this.lblAddEdit.Name = "lblAddEdit";
+            this.lblAddEdit.Size = new System.Drawing.Size(239, 32);
+            this.lblAddEdit.TabIndex = 3;
+            this.lblAddEdit.Text = "Add New Person";
             // 
             // label14
             // 
@@ -546,17 +557,6 @@
             // 
             this.errorProvider1.ContainerControl = this;
             // 
-            // linkLblRemoveImage
-            // 
-            this.linkLblRemoveImage.AutoSize = true;
-            this.linkLblRemoveImage.Location = new System.Drawing.Point(771, 289);
-            this.linkLblRemoveImage.Name = "linkLblRemoveImage";
-            this.linkLblRemoveImage.Size = new System.Drawing.Size(100, 16);
-            this.linkLblRemoveImage.TabIndex = 37;
-            this.linkLblRemoveImage.TabStop = true;
-            this.linkLblRemoveImage.Text = "Remove Image";
-            this.linkLblRemoveImage.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLblRemoveImage_LinkClicked);
-            // 
             // frmAddEditPersonInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -565,7 +565,7 @@
             this.Controls.Add(this.lblPersonID);
             this.Controls.Add(this.pictureBox10);
             this.Controls.Add(this.label14);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lblAddEdit);
             this.Controls.Add(this.panel1);
             this.Name = "frmAddEditPersonInfo";
             this.Text = "Add/Edit Person Info.";
@@ -629,7 +629,7 @@
         private System.Windows.Forms.TextBox txtSecondName;
         private System.Windows.Forms.TextBox txtFirstName;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblAddEdit;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.PictureBox pictureBox10;
         private System.Windows.Forms.Label lblPersonID;

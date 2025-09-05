@@ -13,6 +13,7 @@ namespace DVLD
 {
     public partial class frmManagePeople : Form
     {
+        enum enAddEdit { eAdd, eEdit}
         public frmManagePeople()
         {
             InitializeComponent();
@@ -36,7 +37,21 @@ namespace DVLD
 
         private void btnAddNewPerson_Click(object sender, EventArgs e)
         {
-            Form frm = new frmAddEditPersonInfo();
+            Form frm = new frmAddEditPersonInfo((int)enAddEdit.eAdd);
+            frm.ShowDialog();
+            _RefreshPeopleList();
+        }
+
+        private void addNewPersonToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form frm = new frmAddEditPersonInfo(-1);
+            frm.ShowDialog();
+            _RefreshPeopleList();
+        }
+
+        private void editToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form frm = new frmAddEditPersonInfo((int)dataGridView1.CurrentRow.Cells[0].Value);
             frm.ShowDialog();
             _RefreshPeopleList();
         }
