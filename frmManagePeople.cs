@@ -26,29 +26,17 @@ namespace DVLD
 
         private void frmManagePeople_Load(object sender, EventArgs e)
         {
-            _RefreshPeopleList();
+            _RefreshPeopleList(_FilterPersons());
+            cbFilterPersons.SelectedIndex = 0;
         }
 
-        private void _RefreshPeopleList()
+        private void _CustomSomeColumns()
         {
-            //dataGridView1.DataSource = clsPeople.GetAllPeople();
-            DataTable dt = clsPeople.GetAllPeople();
 
-            dt.Columns.Add("Gender", typeof(string));
-
-            foreach(DataRow row in dt.Rows)
-            {
-                row["Gender"] = (Convert.ToByte(row["Gendor"]) == 0 ? "Male": "Female");
-
-            }
-
-            dt.Columns.Add("Nationality", typeof(string));
-
-            foreach (DataRow row in dt.Rows)
-            {
-                row["Nationality"] = clsCountry.Find((int)row["NationalityCountryID"]).CountryName;
-            }
-
+        }
+        private void _RefreshPeopleList(DataTable dt)
+        {
+            
             dataGridView1.AutoGenerateColumns = false;
             dataGridView1.Columns.Clear();
 
@@ -85,6 +73,7 @@ namespace DVLD
             dataGridView1.Columns.Add("colEmail", "Email");
             dataGridView1.Columns["colEmail"].DataPropertyName = "Email";
 
+            //DataRow[]rows = dt.Select("Nationality = 'Egypt'");
             dataGridView1.DataSource = dt;
             lblNumberOfRecords.Text = dataGridView1.RowCount.ToString();
         }
@@ -93,21 +82,21 @@ namespace DVLD
         {
             Form frm = new frmAddEditPersonInfo(-1);
             frm.ShowDialog();
-            _RefreshPeopleList();
+            _RefreshPeopleList(clsPeople.GetAllPeople());
         }
 
         private void addNewPersonToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form frm = new frmAddEditPersonInfo(-1);
             frm.ShowDialog();
-            _RefreshPeopleList();
+            _RefreshPeopleList(clsPeople.GetAllPeople());
         }
 
         private void editToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form frm = new frmAddEditPersonInfo((int)dataGridView1.CurrentRow.Cells[0].Value);
             frm.ShowDialog();
-            _RefreshPeopleList();
+            _RefreshPeopleList(clsPeople.GetAllPeople());
         }
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -132,7 +121,66 @@ namespace DVLD
                     MessageBoxIcon.Information);
             }
 
-            _RefreshPeopleList();
+            _RefreshPeopleList(clsPeople.GetAllPeople());
+        }
+
+        private DataTable _FilterPersons(string ColumnName = "", string FilterText = "")
+        {
+            DataTable dt = clsPeople.GetAllPeople();
+
+            dt.Columns.Add("Gender", typeof(string));
+
+            foreach (DataRow row in dt.Rows)
+            {
+                row["Gender"] = (Convert.ToByte(row["Gendor"]) == 0 ? "Male" : "Female");
+
+            }
+
+            dt.Columns.Add("Nationality", typeof(string));
+
+            foreach (DataRow row in dt.Rows)
+            {
+                row["Nationality"] = clsCountry.Find((int)row["NationalityCountryID"]).CountryName;
+            }
+
+
+            if (string.IsNullOrWhiteSpace(FilterText))
+                return dt;
+
+            string FilterExpression = "";
+
+            if (ColumnName == "PersonID")
+                if (int.TryParse(FilterText, out int number))
+                    FilterExpression = $"{ColumnName} = {number}";
+                else
+                    return dt.Clone();
+            else
+                FilterExpression = $"{ColumnName} like '%{FilterText}%'";
+
+
+            DataRow[] filteredRows = dt.Select(FilterExpression);
+
+            if (filteredRows.Length > 0)
+                return filteredRows.CopyToDataTable();
+            else
+                return dt.Clone();
+        }
+        private void cbFilterPersons_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbFilterPersons.SelectedIndex == 0)
+            {
+                _RefreshPeopleList(_FilterPersons());
+                txtFilter.Visible = false;
+            }
+            else
+            {
+                txtFilter.Visible = true;
+            }
+        }
+
+        private void txtFilter_TextChanged(object sender, EventArgs e)
+        {
+            _RefreshPeopleList( _FilterPersons(cbFilterPersons.Text, txtFilter.Text));
         }
     }
 }
