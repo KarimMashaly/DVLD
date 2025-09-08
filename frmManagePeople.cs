@@ -30,10 +30,6 @@ namespace DVLD
             cbFilterPersons.SelectedIndex = 0;
         }
 
-        private void _CustomSomeColumns()
-        {
-
-        }
         private void _RefreshPeopleList(DataTable dt)
         {
             
@@ -82,21 +78,21 @@ namespace DVLD
         {
             Form frm = new frmAddEditPersonInfo(-1);
             frm.ShowDialog();
-            _RefreshPeopleList(clsPeople.GetAllPeople());
+            _RefreshPeopleList(_FilterPersons());
         }
 
         private void addNewPersonToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form frm = new frmAddEditPersonInfo(-1);
             frm.ShowDialog();
-            _RefreshPeopleList(clsPeople.GetAllPeople());
+            _RefreshPeopleList(_FilterPersons());
         }
 
         private void editToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form frm = new frmAddEditPersonInfo((int)dataGridView1.CurrentRow.Cells[0].Value);
             frm.ShowDialog();
-            _RefreshPeopleList(clsPeople.GetAllPeople());
+            _RefreshPeopleList(_FilterPersons());
         }
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -165,6 +161,7 @@ namespace DVLD
             else
                 return dt.Clone();
         }
+
         private void cbFilterPersons_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cbFilterPersons.SelectedIndex == 0)
@@ -181,6 +178,14 @@ namespace DVLD
         private void txtFilter_TextChanged(object sender, EventArgs e)
         {
             _RefreshPeopleList( _FilterPersons(cbFilterPersons.Text, txtFilter.Text));
+        }
+
+        private void showDetailsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form frm = new frmPersonDetails((int)dataGridView1.CurrentRow.Cells[0].Value);
+            frm.ShowDialog();
+
+            _RefreshPeopleList(_FilterPersons());
         }
     }
 }

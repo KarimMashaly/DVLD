@@ -7,6 +7,7 @@ using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -21,6 +22,8 @@ namespace DVLD
         int _PersonID;
         clsPeople _Person;
         bool _IsCustomImage = false;
+        bool _IsImageChanged = false;
+        string _NewImagePath = null;
         public frmAddEditPersonInfo(int PersonID)
         {
             InitializeComponent();
@@ -35,7 +38,6 @@ namespace DVLD
 
         private void frmAddEditPersonInfo_Load(object sender, EventArgs e)
         {
-            //_IsCustomImage = false;
             if (_Mode == enMode.eAddNew)
             {
                 _IsChoosedAddNewPerson();
@@ -61,11 +63,9 @@ namespace DVLD
         private void _IsChoosedUpdatePerson()
         {
             _Person = clsPeople.Find(_PersonID);
-            //MessageBox.Show(_Person.FirstName);
             lblAddEdit.Text = "Update Person";
             _FillCountriesInComboBox();
             cbCountry.SelectedItem = clsCountry.Find(_Person.NationalityCountryID).CountryName;
-            //cbCountry.SelectedIndex = cbCountry.FindString(clsCountry.Find(_Person.NationalityCountryID).CountryName);
             lblPersonID.Text = _Person.PersonID.ToString();
             txtNationalNo.Text = _Person.NationalNo;
             txtFirstName.Text = _Person.FirstName;
@@ -85,7 +85,6 @@ namespace DVLD
 
             if(_Person.ImagePath != null && _Person.ImagePath != "")
             {
-                //_IsCustomImage = true;
                 pbImage.Image = new Bitmap(_Person.ImagePath); 
             }
             else
@@ -124,7 +123,7 @@ namespace DVLD
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            _RemoveImageFromFolder();
+
             int CountryID = clsCountry.Find(cbCountry.Text).CountryID;
 
             _Person.FirstName = txtFirstName.Text;
@@ -138,14 +137,26 @@ namespace DVLD
             _Person.Email = txtEmail.Text;
             _Person.Address = txtAddress.Text;
             _Person.NationalityCountryID = CountryID;
-            if (_IsCustomImage)
-                _Person.ImagePath = _CopyImage(openFileDialog1.FileName);
-            else
+
+            if (_IsImageChanged)
             {
-                if (_Mode == enMode.eAddNew)
+                // امسح القديمة لو موجودة
+                if (!string.IsNullOrEmpty(_Person.ImagePath) && File.Exists(_Person.ImagePath))
+                    File.Delete(_Person.ImagePath);
+
+
+                if (!string.IsNullOrEmpty(_NewImagePath))
+                {
+                    // انسخ الصورة الجديدة
+                    _Person.ImagePath = _CopyImage(_NewImagePath);
+                }
+                else
+                {
+                    // لو عملت Remove
                     _Person.ImagePath = null;
+                }
             }
-                //_Person.ImagePath = (_IsCustomImage) ? _CopyImage(openFileDialog1.FileName) : null;
+
             if (_Person.Save())
                 MessageBox.Show("Data saved successfully!!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             else
@@ -155,7 +166,23 @@ namespace DVLD
             lblAddEdit.Text = "Update Person";
             lblPersonID.Text = _Person.PersonID.ToString();
 
+
         }
+
+        private Control FindControlRecursive(Control parent, string controlName)
+        {
+            foreach (Control ctrl in parent.Controls)
+            {
+                if (ctrl.Name == controlName)
+                    return ctrl;
+
+                Control found = FindControlRecursive(ctrl, controlName);
+                if (found != null)
+                    return found;
+            }
+            return null;
+        }
+
 
         private string _CopyImage(string SourcePath)
         {
@@ -171,7 +198,7 @@ namespace DVLD
 
             File.Copy(SourcePath, DestPath,true);
 
-            //MessageBox.Show(DestPath);
+            
             return DestPath;
         }
         private void LinkLblSetImage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -183,8 +210,11 @@ namespace DVLD
 
             if(openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                pbImage.Image = Image.FromFile(openFileDialog1.FileName);
-                _IsCustomImage = true;
+                //pbImage.Image = Image.FromFile(openFileDialog1.FileName);
+               pbImage.Image =new Bitmap(openFileDialog1.FileName);
+               // _IsCustomImage = true;
+                _IsImageChanged = true;
+                _NewImagePath = openFileDialog1.FileName;
                 linkLblRemoveImage.Visible = true;
             }
         }
@@ -204,13 +234,17 @@ namespace DVLD
 
         private void txtFirstName_Validating(object sender, CancelEventArgs e)
         {
-            if(string.IsNullOrWhiteSpace(txtFirstName.Text))
+            if (string.IsNullOrWhiteSpace(txtFirstName.Text))
             {
                 txtFirstName.Focus();
+                e.Cancel = true;
                 errorProvider1.SetError(txtFirstName, "First Name should have a value");
             }
             else
+            {
+                e.Cancel = false;
                 errorProvider1.SetError(txtFirstName, "");
+            }
 
         }
 
@@ -218,66 +252,89 @@ namespace DVLD
         {
             if (string.IsNullOrWhiteSpace(txtSecondName.Text))
             {
+                e.Cancel = true;
                 txtSecondName.Focus();
                 errorProvider1.SetError(txtSecondName, "Second Name should have a value");
             }
             else
+            {
+                e.Cancel = false;
                 errorProvider1.SetError(txtSecondName, "");
+            }
         }
 
         private void txtThirdName_Validating(object sender, CancelEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtThirdName.Text))
             {
+                e.Cancel = true;
                 txtThirdName.Focus();
                 errorProvider1.SetError(txtThirdName, "Third Name should have a value");
             }
             else
+            {
+                e.Cancel = false;
                 errorProvider1.SetError(txtThirdName, "");
+            }
         }
 
         private void txtLastName_Validating(object sender, CancelEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtLastName.Text))
             {
+                e.Cancel = true;
                 txtLastName.Focus();
                 errorProvider1.SetError(txtLastName, "Last Name should have a value");
             }
             else
+            {
+                e.Cancel = false;
                 errorProvider1.SetError(txtLastName, "");
+            }
         }
 
         private void txtNationalNo_Validating(object sender, CancelEventArgs e)
         {
             if (string.IsNullOrEmpty(txtNationalNo.Text))
             {
+                e.Cancel = true;
                 txtNationalNo.Focus();
                 errorProvider1.SetError(txtNationalNo, "National Number should have a value");
                 return;
             }
             else
-               errorProvider1.SetError(txtNationalNo, "");
-
+            {
+                e.Cancel = false;
+                errorProvider1.SetError(txtNationalNo, "");
+            }
 
 
             if (clsPeople.IsPersonExist(txtNationalNo.Text))
             {
+                e.Cancel = true;
                 txtNationalNo.Focus();
                 errorProvider1.SetError(txtNationalNo, "National Number is used for another person!");
             }
             else
+            {
+                e.Cancel = false;
                 errorProvider1.SetError(txtNationalNo, "");
+            }
         }
 
         private void txtPhone_Validating(object sender, CancelEventArgs e)
         {
             if (string.IsNullOrEmpty(txtPhone.Text))
             {
+                e.Cancel = true;
                 txtPhone.Focus();
                 errorProvider1.SetError(txtPhone, "Phone should have a value");
             }
             else
+            {
+                e.Cancel = false;
                 errorProvider1.SetError(txtPhone, "");
+            }
         }
 
         private void txtEmail_Validating(object sender, CancelEventArgs e)
@@ -286,29 +343,26 @@ namespace DVLD
 
             if (!Email.EndsWith("@gmail.com"))
             {
+                e.Cancel = true;
                 txtEmail.Focus();
                 errorProvider1.SetError(txtEmail, "Invalid Email Address Format");
             }
             else
-                errorProvider1.SetError(txtEmail, "");
-
-        }
-
-        private void _RemoveImageFromFolder()
-        {
-            if (_Mode == enMode.eUpdate && !string.IsNullOrEmpty(_Person.ImagePath) && File.Exists(_Person.ImagePath))
             {
-              
-                File.Delete(_Person.ImagePath);
-                _Person.ImagePath = null;
+                e.Cancel = false;
+                errorProvider1.SetError(txtEmail, "");
             }
         }
+
+        
         private void linkLblRemoveImage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            _IsCustomImage = false;
+            
             linkLblRemoveImage.Visible = false;
             pbImage.Image.Dispose();//علشان يحرر الصورة من الذاكرة 
             pbImage.Image = null;
+            _IsImageChanged = true;
+            _NewImagePath = null;
             _SetDefaultImage();
         }
     }
