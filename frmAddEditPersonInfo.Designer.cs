@@ -203,6 +203,7 @@
             // 
             // cbCountry
             // 
+            this.cbCountry.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbCountry.FormattingEnabled = true;
             this.cbCountry.Location = new System.Drawing.Point(557, 182);
             this.cbCountry.Name = "cbCountry";

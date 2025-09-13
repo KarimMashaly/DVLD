@@ -101,7 +101,7 @@
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Location = new System.Drawing.Point(15, 21);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(960, 378);
+            this.groupBox1.Size = new System.Drawing.Size(960, 335);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Person Details";
@@ -370,6 +370,7 @@
             // 
             this.lblFullName.AutoSize = true;
             this.lblFullName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblFullName.ForeColor = System.Drawing.Color.Red;
             this.lblFullName.Location = new System.Drawing.Point(218, 73);
             this.lblFullName.Name = "lblFullName";
             this.lblFullName.Size = new System.Drawing.Size(54, 25);
@@ -392,7 +393,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.groupBox1);
             this.Name = "ctrlPersonDetails";
-            this.Size = new System.Drawing.Size(992, 410);
+            this.Size = new System.Drawing.Size(992, 367);
             this.Load += new System.EventHandler(this.ctrlPersonDetails_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

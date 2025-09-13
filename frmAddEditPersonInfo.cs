@@ -24,6 +24,9 @@ namespace DVLD
         bool _IsCustomImage = false;
         bool _IsImageChanged = false;
         string _NewImagePath = null;
+
+        public delegate void DataBackEventHandler(object sender, int PersonID);
+        public event DataBackEventHandler DataBack;
         public frmAddEditPersonInfo(int PersonID)
         {
             InitializeComponent();
@@ -36,6 +39,10 @@ namespace DVLD
             }
         }
 
+        public void SendDataBack_Click(object sender, EventArgs e)
+        {
+           
+        }
         private void frmAddEditPersonInfo_Load(object sender, EventArgs e)
         {
             if (_Mode == enMode.eAddNew)
@@ -106,6 +113,7 @@ namespace DVLD
         {
             dtpDateOfBirth.MaxDate = DateTime.Now.AddYears(-18);
         }
+
         private void _FillCountriesInComboBox()
         {
             DataTable dtCountries = clsCountry.GetAllCountries();
@@ -118,6 +126,13 @@ namespace DVLD
 
         private void btnClose_Click(object sender, EventArgs e)
         {
+            if (lblPersonID.Text != "N/A")
+            {
+                int PersonID = int.Parse(lblPersonID.Text);
+
+                DataBack?.Invoke(this, PersonID);
+            }
+
             this.Close();
         }
 
@@ -182,7 +197,6 @@ namespace DVLD
             }
             return null;
         }
-
 
         private string _CopyImage(string SourcePath)
         {

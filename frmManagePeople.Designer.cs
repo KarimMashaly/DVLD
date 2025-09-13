@@ -215,6 +215,7 @@
             this.txtFilter.Size = new System.Drawing.Size(188, 22);
             this.txtFilter.TabIndex = 9;
             this.txtFilter.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
+            this.txtFilter.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilter_KeyPress);
             // 
             // pictureBox1
             // 

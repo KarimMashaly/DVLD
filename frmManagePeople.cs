@@ -13,7 +13,7 @@ namespace DVLD
 {
     public partial class frmManagePeople : Form
     {
-        enum enAddEdit { eAdd, eEdit}
+        enum enAddEdit { eAdd, eEdit }
         public frmManagePeople()
         {
             InitializeComponent();
@@ -26,13 +26,14 @@ namespace DVLD
 
         private void frmManagePeople_Load(object sender, EventArgs e)
         {
+            //this.WindowState = FormWindowState.Maximized;
             _RefreshPeopleList(_FilterPersons());
             cbFilterPersons.SelectedIndex = 0;
         }
 
         private void _RefreshPeopleList(DataTable dt)
         {
-            
+
             dataGridView1.AutoGenerateColumns = false;
             dataGridView1.Columns.Clear();
 
@@ -72,6 +73,7 @@ namespace DVLD
             //DataRow[]rows = dt.Select("Nationality = 'Egypt'");
             dataGridView1.DataSource = dt;
             lblNumberOfRecords.Text = dataGridView1.RowCount.ToString();
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
         }
 
         private void btnAddNewPerson_Click(object sender, EventArgs e)
@@ -102,7 +104,7 @@ namespace DVLD
             DialogResult Result = MessageBox.Show(Message, "Configuration Message",
                 MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
 
-            if(Result == DialogResult.OK)
+            if (Result == DialogResult.OK)
             {
                 if (clsApplication.IsApplicationExistByApplicantPersonID(PersonID))
                 {
@@ -177,7 +179,7 @@ namespace DVLD
 
         private void txtFilter_TextChanged(object sender, EventArgs e)
         {
-            _RefreshPeopleList( _FilterPersons(cbFilterPersons.Text, txtFilter.Text));
+            _RefreshPeopleList(_FilterPersons(cbFilterPersons.Text, txtFilter.Text));
         }
 
         private void showDetailsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -186,6 +188,17 @@ namespace DVLD
             frm.ShowDialog();
 
             _RefreshPeopleList(_FilterPersons());
+        }
+
+        private void txtFilter_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (cbFilterPersons.Text == "PersonID")
+            {
+
+                if (!char.IsDigit(e.KeyChar) && e.KeyChar != (char)Keys.Back)
+                    e.Handled = true;
+
+            }
         }
     }
 }
