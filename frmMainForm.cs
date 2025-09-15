@@ -63,5 +63,11 @@ namespace DVLD
             Form frm = new frmManageApplicationTypes();
             frm.ShowDialog();
         }
+
+        private void manageTestTypesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form frm = new frmListTestTypes();
+            frm.ShowDialog();
+        }
     }
 }
