@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnLogin = new System.Windows.Forms.Button();
+            this.cbRememberMe = new System.Windows.Forms.CheckBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.txtPassword = new System.Windows.Forms.TextBox();
@@ -36,8 +38,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.cbRememberMe = new System.Windows.Forms.CheckBox();
-            this.btnLogin = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -57,6 +57,31 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(354, 318);
             this.panel1.TabIndex = 0;
+            // 
+            // btnLogin
+            // 
+            this.btnLogin.BackColor = System.Drawing.Color.DarkBlue;
+            this.btnLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLogin.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.btnLogin.Location = new System.Drawing.Point(241, 264);
+            this.btnLogin.Name = "btnLogin";
+            this.btnLogin.Size = new System.Drawing.Size(85, 41);
+            this.btnLogin.TabIndex = 1;
+            this.btnLogin.Text = "Login";
+            this.btnLogin.UseVisualStyleBackColor = false;
+            this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
+            // 
+            // cbRememberMe
+            // 
+            this.cbRememberMe.AutoSize = true;
+            this.cbRememberMe.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbRememberMe.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.cbRememberMe.Location = new System.Drawing.Point(155, 211);
+            this.cbRememberMe.Name = "cbRememberMe";
+            this.cbRememberMe.Size = new System.Drawing.Size(153, 26);
+            this.cbRememberMe.TabIndex = 5;
+            this.cbRememberMe.Text = "Remember Me.";
+            this.cbRememberMe.UseVisualStyleBackColor = true;
             // 
             // label5
             // 
@@ -120,31 +145,6 @@
             this.label1.Size = new System.Drawing.Size(285, 32);
             this.label1.TabIndex = 1;
             this.label1.Text = "Login to your account";
-            // 
-            // cbRememberMe
-            // 
-            this.cbRememberMe.AutoSize = true;
-            this.cbRememberMe.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbRememberMe.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.cbRememberMe.Location = new System.Drawing.Point(155, 211);
-            this.cbRememberMe.Name = "cbRememberMe";
-            this.cbRememberMe.Size = new System.Drawing.Size(153, 26);
-            this.cbRememberMe.TabIndex = 5;
-            this.cbRememberMe.Text = "Remember Me.";
-            this.cbRememberMe.UseVisualStyleBackColor = true;
-            // 
-            // btnLogin
-            // 
-            this.btnLogin.BackColor = System.Drawing.Color.DarkBlue;
-            this.btnLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLogin.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnLogin.Location = new System.Drawing.Point(241, 264);
-            this.btnLogin.Name = "btnLogin";
-            this.btnLogin.Size = new System.Drawing.Size(85, 41);
-            this.btnLogin.TabIndex = 1;
-            this.btnLogin.Text = "Login";
-            this.btnLogin.UseVisualStyleBackColor = false;
-            this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
             // 
             // frmLoginScreen
             // 

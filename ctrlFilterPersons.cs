@@ -12,8 +12,9 @@ namespace DVLD
             InitializeComponent();
         }
 
-        public void LoadDataInctrlPersonDetails(clsUser User)
+        public void LoadDataInctrlPersonDetails(int UserID)
         {
+            clsUser User = clsUser.Find(UserID);
             gbFilterPersons.Enabled = false;
             PersonID = User.PersonID;
             ctrlPersonDetails1.LoadPersonInfo(User.PersonID);

@@ -38,7 +38,7 @@ namespace DVLD
             if (_User != null)
             {
                 lblUserID.Text = _User.UserID.ToString();
-                ctrlFilterPersons1.LoadDataInctrlPersonDetails(_User);
+                ctrlFilterPersons1.LoadDataInctrlPersonDetails(_User.UserID);
                 txtUserName.Text = _User.UserName;
                 txtPassword.Text = _User.Password;
                 txtConfirmPassword.Text = txtPassword.Text;
